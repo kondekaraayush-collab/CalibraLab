@@ -1,0 +1,148 @@
+
+# CALIBRALAB - REPORT GENERATION
+
+from equipment import equipment_list
+from maintenance import get_all_records
+
+
+# EQUIPMENT REPORT
+
+def equipment_report(equipment_records):
+
+    print("\n========== EQUIPMENT REPORT ==========")
+
+    if len(equipment_records) == 0:
+        print("No equipment records found.")
+        return
+
+    print("Total Equipment Types:", len(equipment_records))
+
+    total_quantity = 0
+
+    for item in equipment_records:
+
+        total_quantity = total_quantity + item["quantity"]
+
+        print("--------------------------------")
+        print("Equipment ID:", item["equipment_id"])
+        print("Equipment Name:", item["name"])
+        print("Category:", item["category"])
+        print("Quantity:", item["quantity"])
+        print("Location:", item["location"])
+        print("Condition:", item["condition"])
+
+    print("--------------------------------")
+    print("Total Equipment Quantity:", total_quantity)
+
+
+# MAINTENANCE REPORT
+
+def maintenance_report(maintenance_records):
+
+    print("\n========== MAINTENANCE REPORT ==========")
+
+    if len(maintenance_records) == 0:
+        print("No maintenance records found.")
+        return
+
+    print("Total Maintenance Records:", len(maintenance_records))
+
+    pending = 0
+    in_progress = 0
+    completed = 0
+
+    for item in maintenance_records:
+
+        status = item.get("status", "")
+
+        if status == "Pending":
+            pending = pending + 1
+
+        elif status == "In Progress":
+            in_progress = in_progress + 1
+
+        elif status == "Completed":
+            completed = completed + 1
+
+        print("--------------------------------")
+        print("Maintenance ID:", item.get("maintenance_id", "N/A"))
+        print("Equipment ID:", item.get("equipment_id", "N/A"))
+        print("Problem:", item.get("problem", "N/A"))
+        print("Status:", status)
+
+    print("\nMaintenance Summary")
+    print("Pending:", pending)
+    print("In Progress:", in_progress)
+    print("Completed:", completed)
+
+
+# CALIBRATION REPORT
+
+def calibration_report(calibration_records):
+
+    print("\n========== CALIBRATION REPORT ==========")
+
+    if len(calibration_records) == 0:
+        print("No calibration records found.")
+        return
+
+    print("Total Calibration Records:", len(calibration_records))
+
+    for item in calibration_records:
+
+        print("--------------------------------")
+        print("Equipment ID:", item.get("equipment_id", "N/A"))
+        print("Calibration Date:", item.get("calibration_date", "N/A"))
+        print("Next Calibration Date:", item.get("next_calibration_date", "N/A"))
+
+
+# GENERATE COMPLETE REPORT
+
+def generate_report(equipment_records, maintenance_records, calibration_records):
+
+    while True:
+
+        print("\n========== CALIBRALAB REPORTS ==========")
+        print("1. Equipment Report")
+        print("2. Maintenance Report")
+        print("3. Calibration Report")
+        print("4. Complete Report")
+        print("5. Exit")
+
+        choice = input("\nEnter your choice: ")
+
+        if choice == "1":
+            equipment_report(equipment_records)
+
+        elif choice == "2":
+            maintenance_report(maintenance_records)
+
+        elif choice == "3":
+            calibration_report(calibration_records)
+
+        elif choice == "4":
+            equipment_report(equipment_records)
+            maintenance_report(maintenance_records)
+            calibration_report(calibration_records)
+
+        elif choice == "5":
+            print("Exiting Reports...")
+            break
+
+        else:
+            print("Invalid choice! Please try again.")
+
+
+# MAIN PROGRAM
+
+if __name__ == "__main__":
+
+    maintenance_records = get_all_records()
+
+    calibration_records = []
+
+    generate_report(
+        equipment_list,
+        maintenance_records,
+        calibration_records
+    )
