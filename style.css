@@ -1,0 +1,443 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    width: 100%;
+    background: #edf1f6;
+    color: #293747;
+    line-height: 1.6;
+}
+
+/* HEADER */
+
+header {
+    width: 100%;
+    background: linear-gradient(120deg, #183653, #28577c);
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+    border-bottom: 4px solid #20a88e;
+}
+
+header h1 {
+    font-size: 36px;
+    margin-bottom: 5px;
+    color: white;
+}
+
+header p {
+    color: #d8e5ef;
+    font-size: 16px;
+}
+
+/* NAVIGATION */
+
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    background: #315b7e;
+    padding: 12px 22px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: 0.2s;
+}
+
+nav a:hover {
+    background: #20a88e;
+    color: white;
+}
+
+/* MAIN CONTENT */
+
+main {
+    width: 100%;
+    max-width: none;
+    padding: 28px;
+    margin: 0;
+}
+
+section {
+    width: 100%;
+    background: white;
+    padding: 28px;
+    margin-bottom: 26px;
+    border: 1px solid #dce3eb;
+    border-radius: 8px;
+    box-shadow: 0 3px 12px rgba(24, 50, 75, 0.07);
+}
+
+h2 {
+    color: #183653;
+    font-size: 27px;
+    margin-bottom: 22px;
+    padding-bottom: 11px;
+    border-bottom: 2px solid #20a88e;
+}
+
+h3 {
+    color: #285b70;
+    font-size: 19px;
+    margin-bottom: 15px;
+}
+
+/* DASHBOARD CARDS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.stat-box {
+    background: linear-gradient(135deg, #edf3fa, #e5f2ef);
+    border-left: 5px solid #20a88e;
+    padding: 23px;
+    border-radius: 7px;
+}
+
+.stat-box h3 {
+    color: #53687c;
+    font-size: 16px;
+}
+
+.stat-box p {
+    color: #183653;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* PIE CHARTS - HORIZONTAL */
+
+.charts-container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 22px;
+    width: 100%;
+    margin-top: 25px;
+}
+
+.chart-card {
+    flex: 1;
+    min-width: 0;
+    background: #f5f7fa;
+    border: 1px solid #dce4ed;
+    border-radius: 8px;
+    padding: 25px;
+    text-align: center;
+}
+
+.chart-card h3 {
+    color: #24496b;
+    margin-bottom: 20px;
+}
+
+.chart-card .pie-chart {
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    margin: 0 auto 22px;
+    box-shadow: 0 4px 12px rgba(24, 50, 75, 0.12);
+}
+
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.chart-legend p {
+    font-size: 15px;
+    color: #34495e;
+}
+
+/* MANAGE EQUIPMENT */
+
+#manage,
+#calibration,
+#reports {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+#manage h2,
+#calibration h2,
+#reports h2 {
+    grid-column: 1 / -1;
+}
+
+/* MAINTENANCE */
+
+#maintenance {
+    display: grid;
+    grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.7fr);
+    gap: 22px;
+}
+
+#maintenance h2 {
+    grid-column: 1 / -1;
+}
+
+#maintenance .form-box {
+    grid-column: 1;
+    grid-row: 2 / 4;
+    margin: 0;
+}
+
+#maintenance h3 {
+    grid-column: 2;
+    margin-bottom: 0;
+}
+
+#maintenance table {
+    grid-column: 2;
+    margin-top: 0;
+    align-self: start;
+}
+
+/* CALIBRATION RECORDS */
+
+#calibration > h3,
+#calibration > p,
+#calibration > table {
+    grid-column: 1 / -1;
+}
+
+/* FORM BOXES */
+
+.form-box {
+    background: #f5f7fa;
+    padding: 23px;
+    border: 1px solid #dce4ed;
+    border-radius: 7px;
+    width: 100%;
+    min-width: 0;
+}
+
+.form-box h3 {
+    color: #187c75;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dce4ed;
+    margin-bottom: 17px;
+}
+
+/* VERTICAL INPUT FIELDS */
+
+.form-box form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 13px;
+    width: 100%;
+}
+
+.form-box input,
+.form-box select,
+.form-box textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 13px;
+    font-size: 15px;
+    color: #293747;
+    background: white;
+    border: 1px solid #c5d0dd;
+    border-radius: 5px;
+}
+
+.form-box input:focus,
+.form-box select:focus,
+.form-box textarea:focus {
+    outline: none;
+    border-color: #20a88e;
+    box-shadow: 0 0 0 3px rgba(32, 168, 142, 0.12);
+}
+
+.form-box label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #40566b;
+    margin-bottom: -8px;
+}
+
+/* BUTTONS */
+
+button {
+    background: #187f79;
+    color: white;
+    border: none;
+    padding: 13px 23px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #12645f;
+    box-shadow: 0 3px 9px rgba(24, 127, 121, 0.2);
+}
+
+/* TABLES */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    background: white;
+}
+
+th {
+    background: #24496b;
+    color: white;
+    padding: 15px 13px;
+    text-align: left;
+    font-size: 15px;
+}
+
+td {
+    padding: 13px;
+    border-bottom: 1px solid #e1e7ed;
+}
+
+tr:nth-child(even) {
+    background: #f1f5f9;
+}
+
+tr:hover {
+    background: #e6f2ef;
+}
+
+td a,
+#reports a {
+    color: #147c75;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+td a:hover,
+#reports a:hover {
+    text-decoration: underline;
+}
+
+/* REPORTS */
+
+#reports p {
+    margin-bottom: 15px;
+}
+
+/* MESSAGES */
+
+.messages {
+    background: #e2f2ec;
+    color: #17664f;
+    border-left: 5px solid #20a88e;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/* FOOTER */
+
+footer {
+    width: 100%;
+    background: #183653;
+    color: #e0eaf2;
+    text-align: center;
+    padding: 23px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #manage,
+    #calibration,
+    #reports,
+    #maintenance {
+        grid-template-columns: 1fr;
+    }
+
+    #manage h2,
+    #calibration h2,
+    #reports h2,
+    #maintenance h2,
+    #calibration > h3,
+    #calibration > p,
+    #calibration > table {
+        grid-column: 1;
+    }
+
+    #maintenance .form-box,
+    #maintenance h3,
+    #maintenance table {
+        grid-column: 1;
+        grid-row: auto;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .charts-container {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 600px) {
+
+    main {
+        padding: 14px;
+    }
+
+    section {
+        padding: 17px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    nav a {
+        padding: 10px 13px;
+        font-size: 14px;
+    }
+
+    .form-box {
+        padding: 17px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        font-size: 13px;
+    }
+
+    th, td {
+        padding: 9px;
+    }
+}

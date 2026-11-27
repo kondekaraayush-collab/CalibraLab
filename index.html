@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalibraLab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <h1>CalibraLab</h1>
+        <p>Laboratory Equipment Management System</p>
+
+        <nav>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#inventory">Inventory</a>
+            <a href="#manage">Manage Equipment</a>
+            <a href="#maintenance">Maintenance</a>
+            <a href="#calibration">Calibration</a>
+            <a href="#reports">Reports</a>
+        </nav>
+    </header>
+
+    <main>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+
+        <!-- DASHBOARD -->
+
+        <section id="dashboard">
+            <h2>Dashboard</h2>
+
+            <div class="stats">
+
+                <div class="stat-box">
+                    <h3>Total Equipment</h3>
+                    <p>{{ total_equipment }}</p>
+                </div>
+
+                <div class="stat-box">
+                    <h3>Total Units</h3>
+                    <p>{{ total_units }}</p>
+                </div>
+
+                <div class="stat-box">
+                    <h3>Working Equipment</h3>
+                    <p>{{ working_equipment }}</p>
+                </div>
+
+                <div class="stat-box">
+                    <h3>Under Maintenance</h3>
+                    <p>{{ under_maintenance }}</p>
+                </div>
+
+            </div>
+
+
+            <!-- BOTH PIE CHARTS -->
+
+            {% set up_to_date = total_calibration - due_soon_calibration - overdue_calibration %}
+
+            {% if total_calibration > 0 %}
+                {% set up_percent = up_to_date * 100 / total_calibration %}
+                {% set due_percent = due_soon_calibration * 100 / total_calibration %}
+                {% set overdue_percent = overdue_calibration * 100 / total_calibration %}
+            {% else %}
+                {% set up_percent = 0 %}
+                {% set due_percent = 0 %}
+                {% set overdue_percent = 0 %}
+            {% endif %}
+
+            <div class="charts-container">
+
+                <!-- EQUIPMENT CONDITION -->
+
+                <div class="chart-card">
+
+                    <h3>Equipment Condition</h3>
+
+                    <div class="pie-chart"
+                        style="background: conic-gradient(
+                            #16a085 0% {{ working_percentage }}%,
+                            #dc5965 {{ working_percentage }}% 100%
+                        );">
+                    </div>
+
+                    <div class="chart-legend">
+                        <p>🟢 Working: {{ working_percentage }}%</p>
+                        <p>🔴 Non-working: {{ non_working_percentage }}%</p>
+                    </div>
+
+                </div>
+
+
+                <!-- CALIBRATION STATUS -->
+
+                <div class="chart-card">
+
+                    <h3>Calibration Status</h3>
+
+                    <div class="pie-chart"
+                        style="background: conic-gradient(
+                            #16a085 0% {{ up_percent }}%,
+                            #f0ad4e {{ up_percent }}% {{ up_percent + due_percent }}%,
+                            #dc5965 {{ up_percent + due_percent }}% 100%
+                        );">
+                    </div>
+
+                    <div class="chart-legend">
+                        <p>🟢 Up to Date: {{ up_to_date }}</p>
+                        <p>🟠 Due Soon: {{ due_soon_calibration }}</p>
+                        <p>🔴 Overdue: {{ overdue_calibration }}</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- EQUIPMENT INVENTORY -->
+
+        <section id="inventory">
+            <h2>Equipment Inventory</h2>
+
+            <table>
+                <tr>
+                    <th>Equipment ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>Location</th>
+                    <th>Condition</th>
+                    <th>Report</th>
+                </tr>
+
+                {% for item in equipment_list %}
+                <tr>
+                    <td>{{ item.equipment_id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.location }}</td>
+                    <td>{{ item.condition }}</td>
+
+                    <td>
+                        <a href="/equipment_report/{{ item.equipment_id }}">
+                            Download PDF
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </section>
+
+
+        <!-- MANAGE EQUIPMENT -->
+
+        <section id="manage">
+            <h2>Manage Equipment</h2>
+
+            <div class="form-box">
+                <h3>Add New Equipment</h3>
+
+                <form action="/add_equipment" method="POST">
+
+                    <input type="text" name="equipment_id" placeholder="Equipment ID" required>
+
+                    <input type="text" name="name" placeholder="Equipment Name" required>
+
+                    <input type="text" name="category" placeholder="Category" required>
+
+                    <input type="number" name="quantity" placeholder="Quantity" required>
+
+                    <input type="text" name="location" placeholder="Location" required>
+
+                    <select name="condition" required>
+                        <option value="Working">Working</option>
+                        <option value="Not Working">Not Working</option>
+                        <option value="Under Maintenance">Under Maintenance</option>
+                    </select>
+
+                    <button type="submit">Add Equipment</button>
+
+                </form>
+            </div>
+
+
+            <div class="form-box">
+                <h3>Search Equipment</h3>
+
+                <form action="/" method="GET">
+
+                    <input type="text" name="search" placeholder="Enter Equipment ID or Name">
+
+                    <button type="submit">Search</button>
+
+                </form>
+
+                {% if search_results %}
+
+                <h3>Search Results</h3>
+
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Location</th>
+                        <th>Condition</th>
+                    </tr>
+
+                    {% for item in search_results %}
+                    <tr>
+                        <td>{{ item.equipment_id }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.category }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.location }}</td>
+                        <td>{{ item.condition }}</td>
+                    </tr>
+                    {% endfor %}
+
+                </table>
+
+                {% endif %}
+            </div>
+
+
+            <div class="form-box">
+                <h3>Update Equipment</h3>
+
+                <form action="/update_equipment" method="POST">
+
+                    <input type="text" name="equipment_id" placeholder="Equipment ID" required>
+
+                    <select name="field" required>
+                        <option value="name">Name</option>
+                        <option value="category">Category</option>
+                        <option value="quantity">Quantity</option>
+                        <option value="location">Location</option>
+                        <option value="condition">Condition</option>
+                    </select>
+
+                    <input type="text" name="value" placeholder="New Value" required>
+
+                    <button type="submit">Update Equipment</button>
+
+                </form>
+            </div>
+
+
+            <div class="form-box">
+                <h3>Delete Equipment</h3>
+
+                <form action="/delete_equipment" method="POST">
+
+                    <input type="text" name="equipment_id" placeholder="Equipment ID" required>
+
+                    <button type="submit">Delete Equipment</button>
+
+                </form>
+            </div>
+
+        </section>
+
+
+        <!-- MAINTENANCE MANAGEMENT -->
+
+        <section id="maintenance">
+            <h2>Maintenance Management</h2>
+
+            <div class="form-box">
+                <h3>Add Maintenance Record</h3>
+
+                <form action="/add_maintenance" method="POST">
+
+                    <input type="text" name="equipment_id" placeholder="Equipment ID" required>
+
+                    <input type="text" name="problem" placeholder="Problem Description" required>
+
+                    <input type="date" name="reported_date" required>
+
+                    <select name="status" required>
+                        <option value="Pending">Pending</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+
+                    <input type="text" name="remarks" placeholder="Remarks">
+
+                    <button type="submit">Add Maintenance Record</button>
+
+                </form>
+            </div>
+
+
+            <h3>Maintenance Records</h3>
+
+            <table>
+                <tr>
+                    <th>Record ID</th>
+                    <th>Equipment ID</th>
+                    <th>Problem</th>
+                    <th>Reported Date</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                </tr>
+
+                {% for record in maintenance_records %}
+                <tr>
+                    <td>{{ record.maintenance_id or record.record_id or record.id }}</td>
+                    <td>{{ record.equipment_id }}</td>
+                    <td>{{ record.problem }}</td>
+                    <td>{{ record.reported_date }}</td>
+                    <td>{{ record.status }}</td>
+                    <td>{{ record.remarks }}</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+        </section>
+
+
+        <!-- CALIBRATION MANAGEMENT -->
+
+        <section id="calibration">
+            <h2>Calibration Management</h2>
+
+            <div class="form-box">
+                <h3>Add Calibration Record</h3>
+
+                <form action="/add_calibration" method="POST">
+
+                    <input type="text" name="equipment_id" placeholder="Equipment ID" required>
+
+                    <label>Last Calibration Date</label>
+                    <input type="date" name="last_calibration_date" required>
+
+                    <label>Next Due Date</label>
+                    <input type="date" name="next_due_date" required>
+
+                    <input type="text" name="remarks" placeholder="Remarks">
+
+                    <button type="submit">Add Calibration Record</button>
+
+                </form>
+            </div>
+
+
+            <div class="form-box">
+                <h3>Update Calibration Record</h3>
+
+                <form action="/update_calibration" method="POST">
+
+                    <input type="text" name="equipment_id" placeholder="Equipment ID" required>
+
+                    <label>Last Calibration Date</label>
+                    <input type="date" name="last_calibration_date" required>
+
+                    <label>Next Due Date</label>
+                    <input type="date" name="next_due_date" required>
+
+                    <input type="text" name="remarks" placeholder="Remarks">
+
+                    <button type="submit">Update Calibration</button>
+
+                </form>
+            </div>
+
+
+            <h3>Calibration Records</h3>
+
+            <p>Calibration due within the next {{ due_soon_days }} days is shown as Due Soon.</p>
+
+            <table>
+                <tr>
+                    <th>Equipment ID</th>
+                    <th>Last Calibration</th>
+                    <th>Next Due Date</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                </tr>
+
+                {% for record in all_calibration_records %}
+                <tr>
+                    <td>{{ record.equipment_id }}</td>
+                    <td>{{ record.last_calibration_date }}</td>
+                    <td>{{ record.next_due_date }}</td>
+                    <td>{{ record.status }}</td>
+                    <td>{{ record.remarks }}</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+        </section>
+
+
+        <!-- REPORTS -->
+
+        <section id="reports">
+            <h2>Reports</h2>
+
+            <div class="form-box">
+
+                <h3>Download Period Report</h3>
+
+                <p>
+                    Select a date range to download maintenance and calibration
+                    records for that period in one PDF report.
+                </p>
+
+                <form action="/period_report" method="POST">
+
+                    <label>Start Date</label>
+                    <input type="date" name="start_date" required>
+
+                    <label>End Date</label>
+                    <input type="date" name="end_date" required>
+
+                    <button type="submit">Download Period Report</button>
+
+                </form>
+
+            </div>
+
+            <div class="form-box">
+
+                <h3>Individual Equipment Report</h3>
+
+                <p>
+                    You can download an individual equipment report from the
+                    Inventory section. It includes equipment details and
+                    its maintenance history.
+                </p>
+
+                <a href="#inventory">Go to Equipment Inventory</a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        <p>CalibraLab | Laboratory Equipment Management System</p>
+        <p>Developed as a BTech First Year Project</p>
+    </footer>
+
+</body>
+</html>

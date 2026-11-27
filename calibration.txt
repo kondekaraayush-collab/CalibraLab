@@ -1,0 +1,1 @@
+equipment_id|last_calibration_date|next_due_date|status|remarks
